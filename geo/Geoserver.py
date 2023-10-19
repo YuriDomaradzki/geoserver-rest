@@ -398,12 +398,13 @@ class Geoserver:
 
     def publish_time_dimension_to_coveragestore(
         self,
+        layer_name: str,
         store_name: Optional[str] = None,
         workspace: Optional[str] = None,
         presentation: Optional[str] = "LIST",
         units: Optional[str] = "ISO8601",
         default_value: Optional[str] = "MINIMUM",
-        content_type: str = "application/xml; charset=UTF-8",
+        content_type: str = "application/xml; charset=UTF-8"
     ):
         """
         Create time dimension in coverage store to publish time series in geoserver.
@@ -423,8 +424,8 @@ class Geoserver:
         https://docs.geoserver.org/master/en/user/services/wms/time.html
         """
 
-        url = "{0}/rest/workspaces/{1}/coveragestores/{2}/coverages/{2}".format(
-            self.service_url, workspace, store_name
+        url = "{0}/rest/workspaces/{1}/coveragestores/{2}/coverages/{3}".format(
+            self.service_url, workspace, store_name, layer_name
         )
 
         headers = {"content-type": content_type}
@@ -450,8 +451,9 @@ class Geoserver:
         r = self._requests(
             method="put", url=url, data=time_dimension_data, headers=headers
         )
+
         if r.status_code in [200, 201]:
-            return r.json()
+            return r.status_code
         else:
             raise GeoserverException(r.status_code, r.content)
 
@@ -568,7 +570,10 @@ class Geoserver:
         r = self._requests(
             method="put", url=url, data=time_dimension_data, headers=headers
         )
-        return r.status_code
+        if r.status_code in [200, 201]:
+            return r.status_code
+        else:
+            raise GeoserverException(r.status_code, r.content)
 
     # _______________________________________________________________________________________________
     #
