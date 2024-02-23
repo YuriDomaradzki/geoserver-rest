@@ -96,7 +96,7 @@ class Geoserver:
 
         """
         url = "{}/rest/about/manifest.json".format(self.service_url)
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -118,7 +118,7 @@ class Geoserver:
         Returns the status of the geoserver. It shows the status details of all installed and configured modules.
         """
         url = "{}/rest/about/status.json".format(self.service_url)
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -129,7 +129,7 @@ class Geoserver:
         It returns the system status of the geoserver. It returns a list of system-level information. Major operating systems (Linux, Windows and MacOX) are supported out of the box.
         """
         url = "{}/rest/about/system-status.json".format(self.service_url)
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -144,7 +144,7 @@ class Geoserver:
         curl -X POST http://localhost:8080/geoserver/rest/reload -H  "accept: application/json" -H  "content-type: application/json"
         """
         url = "{}/rest/reload".format(self.service_url)
-        r = requests.post(url, auth=(self.username, self.password))
+        r = requests.post(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return "Status code: {}".format(r.status_code)
         else:
@@ -159,7 +159,7 @@ class Geoserver:
         curl -X POST http://localhost:8080/geoserver/rest/reset -H  "accept: application/json" -H  "content-type: application/json"
         """
         url = "{}/rest/reset".format(self.service_url)
-        r = requests.post(url, auth=(self.username, self.password))
+        r = requests.post(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return "Status code: {}".format(r.status_code)
         else:
@@ -176,7 +176,7 @@ class Geoserver:
         Returns the default workspace.
         """
         url = "{}/rest/workspaces/default".format(self.service_url)
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -189,7 +189,7 @@ class Geoserver:
         """
         payload = {"recurse": "true"}
         url = "{}/rest/workspaces/{}.json".format(self.service_url, workspace)
-        r = requests.get(url, auth=(self.username, self.password), params=payload)
+        r = requests.get(url, auth=(self.username, self.password), params=payload, verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -200,7 +200,7 @@ class Geoserver:
         Returns all the workspaces.
         """
         url = "{}/rest/workspaces".format(self.service_url)
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -253,7 +253,7 @@ class Geoserver:
         """
         payload = {"recurse": "true"}
         url = "{}/rest/workspaces/{}".format(self.service_url, workspace)
-        r = requests.delete(url, auth=(self.username, self.password), params=payload)
+        r = requests.delete(url, auth=(self.username, self.password), params=payload, verify=False)
 
         if r.status_code == 200:
             return "Status code: {}, delete workspace".format(r.status_code)
@@ -301,7 +301,7 @@ class Geoserver:
         url = "{}/rest/workspaces/{}/datastores.json".format(
             self.service_url, workspace
         )
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -341,7 +341,7 @@ class Geoserver:
             workspace = "default"
 
         url = "{}/rest/workspaces/{}/coveragestores".format(self.service_url, workspace)
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -493,7 +493,7 @@ class Geoserver:
 
         if workspace is not None:
             url = "{}/rest/workspaces/{}/layers".format(self.service_url, workspace)
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -600,7 +600,7 @@ class Geoserver:
             url = "{}/rest/workspaces/{}/layergroups".format(
                 self.service_url, workspace
             )
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -1157,7 +1157,7 @@ class Geoserver:
             url = "{}/rest/workspaces/{}/styles.json".format(
                 self.service_url, workspace
             )
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             return r.json()
         else:
@@ -1217,6 +1217,7 @@ class Geoserver:
                     data=f.read(),
                     auth=(self.username, self.password),
                     headers=header_sld,
+                    verify=False
                 )
             if r_sld.status_code == 200:
                 return r_sld.status_code
@@ -1297,7 +1298,8 @@ class Geoserver:
                     url + "/" + style_name,
                     data=f.read(),
                     auth=(self.username, self.password),
-                    headers=header_sld,
+                    headers=header_sld, 
+                    verify=False
                 )
             os.remove("style.sld")
             if r_sld.status_code == 200:
@@ -1788,7 +1790,7 @@ class Geoserver:
         else:
             url = "{}/rest/workspaces/{}/datastores".format(self.service_url, workspace)
             r = requests.post(
-                url, data, auth=(self.username, self.password), headers=headers
+                url, data, auth=(self.username, self.password), headers=headers, verify=False
             )
 
         if r.status_code in [200, 201]:
@@ -1850,6 +1852,7 @@ class Geoserver:
                 data=f.read(),
                 auth=(self.username, self.password),
                 headers=headers,
+                verify=False
             )
         if r.status_code in [200, 201, 202]:
             return "The shapefile datastore created successfully!"
@@ -1905,6 +1908,7 @@ class Geoserver:
             data=layer_xml,
             auth=(self.username, self.password),
             headers=headers,
+            verify=False
         )
         if r.status_code == 201:
             return r.status_code
@@ -1954,7 +1958,8 @@ class Geoserver:
             url,
             data=layer_xml,
             auth=(self.username, self.password),
-            headers=headers,
+            headers=headers, 
+            verify=False
         )
         if r.status_code == 200:
             return r.status_code
@@ -2023,6 +2028,7 @@ class Geoserver:
             data=layer_xml,
             auth=(self.username, self.password),
             headers=headers,
+            verify=False
         )
 
         if r.status_code == 201:
@@ -2042,7 +2048,7 @@ class Geoserver:
         url = "{}/rest/workspaces/{}/datastores/{}/featuretypes.json".format(
             self.service_url, workspace, store_name
         )
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             r_dict = r.json()
             features = [i["name"] for i in r_dict["featureTypes"]["featureType"]]
@@ -2065,7 +2071,7 @@ class Geoserver:
         url = "{}/rest/workspaces/{}/datastores/{}/featuretypes/{}.json".format(
             self.service_url, workspace, store_name, feature_type_name
         )
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             r_dict = r.json()
             attribute = [
@@ -2087,7 +2093,7 @@ class Geoserver:
         url = "{}/rest/workspaces/{}/datastores/{}".format(
             self.service_url, workspace, store_name
         )
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
         if r.status_code == 200:
             r_dict = r.json()
             return r_dict["dataStore"]
@@ -2111,7 +2117,7 @@ class Geoserver:
         )
         if workspace is None:
             url = "{}/datastores/{}".format(self.service_url, featurestore_name)
-        r = requests.delete(url, auth=(self.username, self.password), params=payload)
+        r = requests.delete(url, auth=(self.username, self.password), params=payload, verify=False)
 
         if r.status_code == 200:
             return "Status code: {}, delete featurestore".format(r.status_code)
@@ -2139,7 +2145,7 @@ class Geoserver:
                 self.service_url, coveragestore_name
             )
 
-        r = requests.delete(url, auth=(self.username, self.password), params=payload)
+        r = requests.delete(url, auth=(self.username, self.password), params=payload, verify=False)
 
         if r.status_code == 200:
             return "Coverage store deleted successfully"
@@ -2168,7 +2174,7 @@ class Geoserver:
             url += "service/{}/users/".format(service)
 
         headers = {"accept": "application/xml"}
-        r = requests.get(url, auth=(self.username, self.password), headers=headers)
+        r = requests.get(url, auth=(self.username, self.password), headers=headers, verify=False)
 
         if r.status_code == 200:
             return parse(r.content)
@@ -2201,7 +2207,7 @@ class Geoserver:
         )
         headers = {"content-type": "text/xml", "accept": "application/json"}
         r = requests.post(
-            url, data, auth=(self.username, self.password), headers=headers
+            url, data, auth=(self.username, self.password), headers=headers, verify=False
         )
 
         if r.status_code == 201:
@@ -2243,7 +2249,7 @@ class Geoserver:
         print(url, data)
         headers = {"content-type": "text/xml", "accept": "application/json"}
         r = requests.post(
-            url, data, auth=(self.username, self.password), headers=headers
+            url, data, auth=(self.username, self.password), headers=headers, verify=False
         )
 
         if r.status_code == 200:
@@ -2269,7 +2275,7 @@ class Geoserver:
             url += "service/{}/user/{}".format(service, username)
 
         headers = {"accept": "application/json"}
-        r = requests.delete(url, auth=(self.username, self.password), headers=headers)
+        r = requests.delete(url, auth=(self.username, self.password), headers=headers, verify=False)
 
         if r.status_code == 200:
             return "User deleted successfully"
@@ -2292,7 +2298,7 @@ class Geoserver:
         else:
             url += "service/{}/groups/".format(service)
 
-        r = requests.get(url, auth=(self.username, self.password))
+        r = requests.get(url, auth=(self.username, self.password), verify=False)
 
         if r.status_code == 200:
             return parse(r.content)
@@ -2315,7 +2321,7 @@ class Geoserver:
             url += "group/{}".format(group)
         else:
             url += "service/{}/group/{}".format(service, group)
-        r = requests.post(url, auth=(self.username, self.password))
+        r = requests.post(url, auth=(self.username, self.password), verify=False)
 
         if r.status_code == 201:
             return "Group created successfully"
@@ -2339,7 +2345,7 @@ class Geoserver:
         else:
             url += "service/{}/group/{}".format(service, group)
 
-        r = requests.delete(url, auth=(self.username, self.password))
+        r = requests.delete(url, auth=(self.username, self.password), verify=False)
 
         if r.status_code == 200:
             return "Group deleted successfully"
