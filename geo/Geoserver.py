@@ -3,14 +3,19 @@ import os
 from typing import List, Optional, Set
 
 # third-party libraries
+import urllib3
+import warnings
 import requests
 from xmltodict import parse, unparse
+from urllib3.exceptions import InsecureRequestWarning
 
 # custom functions
 from .Calculation_gdal import raster_value
 from .Style import catagorize_xml, classified_xml, coverage_style_xml, outline_only_xml
 from .supports import prepare_zip_file
 
+
+urllib3.disable_warnings(InsecureRequestWarning)
 
 # Custom exceptions.
 class GeoserverException(Exception):
@@ -71,13 +76,13 @@ class Geoserver:
 
     def _requests(self, method: str, url: str, **kwargs) -> requests.Response:
         if method == "post":
-            return requests.post(url, auth=(self.username, self.password), **kwargs)
+            return requests.post(url, auth=(self.username, self.password), verify=False, **kwargs)
         elif method == "get":
-            return requests.get(url, auth=(self.username, self.password), **kwargs)
+            return requests.get(url, auth=(self.username, self.password), verify=False, **kwargs)
         elif method == "put":
-            return requests.put(url, auth=(self.username, self.password), **kwargs)
+            return requests.put(url, auth=(self.username, self.password), verify=False, **kwargs)
         elif method == "delete":
-            return requests.delete(url, auth=(self.username, self.password), **kwargs)
+            return requests.delete(url, auth=(self.username, self.password), verify=False, **kwargs)
 
     # _______________________________________________________________________________________________
     #
@@ -182,6 +187,8 @@ class Geoserver:
         get name  workspace if exist
         Example: curl -v -u admin:admin -XGET -H "Accept: text/xml"  http://localhost:8080/geoserver/rest/workspaces/acme.xml
         """
+        payload = {"recurse": "true"}
+        url = "{}/rest/workspaces/{}.json".format(self.service_url, workspace)
         r = requests.get(url, auth=(self.username, self.password), params=payload)
         if r.status_code == 200:
             return r.json()
