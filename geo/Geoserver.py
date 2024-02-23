@@ -182,8 +182,6 @@ class Geoserver:
         get name  workspace if exist
         Example: curl -v -u admin:admin -XGET -H "Accept: text/xml"  http://localhost:8080/geoserver/rest/workspaces/acme.xml
         """
-        payload = {"recurse": "true"}
-        url = "{}/rest/workspaces/{}.json".format(self.service_url, workspace)
         r = requests.get(url, auth=(self.username, self.password), params=payload)
         if r.status_code == 200:
             return r.json()
