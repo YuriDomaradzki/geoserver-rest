@@ -1,7 +1,9 @@
 import os
+import re
 from tempfile import mkstemp
 from typing import Dict
 from zipfile import ZipFile
+import xml.etree.ElementTree as ET
 
 
 def prepare_zip_file(name: str, data: Dict) -> str:
@@ -37,3 +39,38 @@ def prepare_zip_file(name: str, data: Dict) -> str:
     zip_file.close()
     os.close(fd)
     return path
+
+
+def is_valid_xml(xml_string: str) -> bool:
+
+    """
+    Returns True if string is valid XML, false otherwise
+
+        Parameters
+    ----------
+    xml_string : string containing xml
+
+    Returns
+    -------
+    bool
+    """
+
+    try:
+        # Attempt to parse the XML string
+        ET.fromstring(xml_string)
+        return True
+    except ET.ParseError:
+        return False
+
+
+def is_surrounded_by_quotes(text, param):
+    # The regex pattern searches for '%foo%' surrounded by single quotes.
+    # It uses \'%foo%\' to match '%foo%' literally, including the single quotes.
+    pattern = rf"\'%{param}%\'"
+
+    # re.search() searches the string for the first location where the regex pattern produces a match.
+    # If a match is found, re.search() returns a match object. Otherwise, it returns None.
+    match = re.search(pattern, text)
+
+    # Return True if a match is found, False otherwise.
+    return bool(match)

@@ -82,7 +82,7 @@ def coverage_style_colormapentry(
 
 
 def coverage_style_xml(
-    color_ramp, style_name, cmap_type, min_value, max_value, number_of_classes
+    color_ramp, style_name, cmap_type, min_value, max_value, number_of_classes, opacity
 ):
     min_max_difference = max_value - min_value
     style_append = ""
@@ -108,6 +108,7 @@ def coverage_style_xml(
         <sld:FeatureTypeStyle>
             <sld:Rule>
             <sld:RasterSymbolizer>
+                <sld:Opacity>{3}</sld:Opacity>
                 <sld:ChannelSelection>
                 <sld:GrayChannel>
                     <sld:SourceChannelName>1</sld:SourceChannelName>
@@ -123,14 +124,14 @@ def coverage_style_xml(
     </UserLayer>
     </StyledLayerDescriptor>
     """.format(
-        cmap_type, style_append, style_name
+        cmap_type, style_append, style_name, opacity
     )
 
     with open("style.sld", "w") as f:
         f.write(style)
 
 
-def outline_only_xml(color, geom_type="polygon"):
+def outline_only_xml(color, width, geom_type="polygon"):
     if geom_type == "point":
         symbolizer = """
             <PointSymbolizer>
@@ -153,26 +154,23 @@ def outline_only_xml(color, geom_type="polygon"):
                 <LineSymbolizer>
                     <Stroke>
                     <CssParameter name="stroke">{}</CssParameter>
-                    <CssParameter name="stroke-width">3</CssParameter>
+                    <CssParameter name="stroke-width"{}</CssParameter>
                     </Stroke>
                 </LineSymbolizer>
             """.format(
-            color
+            color, width
         )
 
     elif geom_type == "polygon":
         symbolizer = """
                 <PolygonSymbolizer>
-                    <Fill>
-                        <CssParameter name="fill">#FFFFFF</CssParameter>
-                    </Fill>
                     <Stroke>
                     <CssParameter name="stroke">{}</CssParameter>
-                    <CssParameter name="stroke-width">0.26</CssParameter>
+                    <CssParameter name="stroke-width">{}</CssParameter>
                     </Stroke>
                 </PolygonSymbolizer>
             """.format(
-            color
+            color, width
         )
 
     else:
