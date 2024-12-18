@@ -299,6 +299,7 @@ class Geoserver:
         dict
             The workspace information.
         """
+        payload = {"recurse": "true"}
         url = "{}/rest/workspaces/{}.json".format(self.service_url, workspace)
         r = requests.get(url, auth=(self.username, self.password), params=payload, verify=False)
         if r.status_code == 200:
